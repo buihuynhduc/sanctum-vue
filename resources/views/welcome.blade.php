@@ -405,11 +405,7 @@
 </head>
 <body class="antialiased">
 <div id="app">
-    <div>
-        <router-link to="/login" style="position: absolute;right: 100px;top:15px">Login</router-link>
-        <router-link to="/register" style="position: absolute;right: 30px;top:15px">Register</router-link>
-    </div>
-    <router-view></router-view>
+
 </div>
 </body>
 <script src="../js/app.js"></script>

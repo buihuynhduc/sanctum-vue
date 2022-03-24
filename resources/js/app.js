@@ -1,14 +1,14 @@
-require('./bootstrap');
 
+require('./bootstrap');
 import {createApp} from "vue";
 import router from "./router";
-import Login from "./Component/Login";
-import Register from "./Component/Register";
+import App from './App.vue'
+import axios from "axios";
 
 
-createApp({
-    components: {
-        Login,
-        Register
-    }
-}).use(router).mount('#app')
+
+
+const app = createApp(App)
+app.config.globalProperties.$axios =axios;
+app.use(router)
+app.mount('#app')
