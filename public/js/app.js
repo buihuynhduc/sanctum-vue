@@ -19536,7 +19536,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    if (window.Laravel.isLoggedin) {
+    if (auth.isLoggedin) {
       this.isLoggedIn = true;
     }
   },
@@ -19574,7 +19574,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
-    if (!window.Laravel.isLoggedin) {
+    if (!auth.isLoggedin) {
       window.location.href = "/";
     }
 
@@ -19641,7 +19641,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
-    if (window.Laravel.isLoggedin) {
+    if (auth.isLoggedin) {
       return next('dashboard');
     }
 
@@ -19691,7 +19691,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     beforeRouteEnter: function beforeRouteEnter(to, from, next) {
-      if (window.Laravel.isLoggedin) {
+      if (auth.isLoggedin) {
         return next('dashboard');
       }
 
@@ -19774,12 +19774,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* STABLE */
 
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    "class": "nav-item nav-link",
     onClick: _cache[0] || (_cache[0] = function () {
       return $options.logout && $options.logout.apply($options, arguments);
     }),
     style: {
       "position": "absolute",
-      "right": "15px"
+      "right": "15px",
+      "border": "none"
     }
   }, "Logout")])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.isLoggedIn == false ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
     to: "/",

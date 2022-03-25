@@ -11,7 +11,7 @@ class LogoutController extends Controller
     public function Logout(Request $request)
     {
         Auth::guard('web')->logout();
-        $request->session()->invalidate();
+        $request->session()->flush();
         $request->session()->regenerateToken();
         return response()->json([
             'message'=>'logout success'

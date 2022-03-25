@@ -36,7 +36,7 @@ export default {
         },
     },
     beforeRouteEnter(to, from, next) {
-        if (window.Laravel.isLoggedin) {
+        if (auth.isLoggedin) {
             return next('dashboard');
         }
         next();

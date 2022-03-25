@@ -13,7 +13,7 @@ export default {
         }
     },
     beforeRouteEnter(to, from, next) {
-        if (!window.Laravel.isLoggedin) {
+        if (!auth.isLoggedin) {
             window.location.href = "/";
         }
         next();

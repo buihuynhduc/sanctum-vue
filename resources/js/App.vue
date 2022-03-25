@@ -8,7 +8,7 @@
                 <!-- for non-logged user-->
                 <div class="navbar-nav"  v-if="isLoggedIn==true">
                     <router-link to="/dashboard" class="nav-item nav-link">Dashboard</router-link>
-                    <button @click="logout" style="position: absolute;right: 15px;">Logout</button>
+                    <button class="nav-item nav-link" @click="logout" style="position: absolute;right: 15px;border: none;">Logout</button>
                 </div>
                 <div class="navbar-nav" v-if="isLoggedIn==false">
                     <router-link to="/" class="nav-item nav-link">Home</router-link>
@@ -32,7 +32,7 @@ export default {
         }
     },
     created() {
-        if(window.Laravel.isLoggedin)
+        if(auth.isLoggedin)
         {
             this.isLoggedIn=true;
         }
