@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,4 +21,17 @@ Route::get('/profile',[\App\Http\Controllers\Auth\ProfileController::class,'Prof
 Route::group(['middleware'=>"auth:sanctum"],function ()
 {
    Route::post('/logout',[\App\Http\Controllers\Auth\LogoutController::class,'Logout']);
+    Route::get('/book',[\App\Http\Controllers\BookController::class,'index']);
+    Route::get('book/{id}',[\App\Http\Controllers\BookController::class,'show']);
+    Route::post('book',[\App\Http\Controllers\BookController::class,'store']);
+    Route::put('book/{id}',[\App\Http\Controllers\BookController::class,'update']);
+    Route::delete('book/{id}',[\App\Http\Controllers\BookController::class,'destroy']);
+
+    Route::get('category',[CategoryController::class,'index']);
+    Route::get('category/{id}',[\App\Http\Controllers\CategoryController::class,'show']);
+    Route::get('category/countbook/{id}',[\App\Http\Controllers\CategoryController::class,'getcountbook']);
+    Route::post('category',[\App\Http\Controllers\CategoryController::class,'store']);
+    Route::put('category/{id}',[\App\Http\Controllers\CategoryController::class,'update']);
+    Route::delete('category/{id}',[\App\Http\Controllers\CategoryController::class,'destroy']);
+
 });

@@ -8,6 +8,8 @@
                 <!-- for non-logged user-->
                 <div class="navbar-nav"  v-if="isLoggedIn==true">
                     <router-link to="/dashboard" class="nav-item nav-link">Dashboard</router-link>
+                    <router-link to="/book" class="nav-item nav-link">Book</router-link>
+                    <router-link to="/category" class="nav-item nav-link">Category</router-link>
                     <button class="nav-item nav-link" @click="logout" style="position: absolute;right: 15px;border: none;">Logout</button>
                 </div>
                 <div class="navbar-nav" v-if="isLoggedIn==false">

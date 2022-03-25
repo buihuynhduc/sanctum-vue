@@ -12,6 +12,10 @@ export default {
             name: null,
         }
     },
+    created() {
+        this.name = auth.user.name;
+
+    },
     beforeRouteEnter(to, from, next) {
         if (!auth.isLoggedin) {
             window.location.href = "/";
