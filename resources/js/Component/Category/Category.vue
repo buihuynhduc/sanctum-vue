@@ -5,19 +5,19 @@
             <button id="addcategory" ref="addcategory" class="btn btn-primary" v-on:click="popupform"
                     style="margin-bottom: 10px">Add Category
             </button>
-            <form  id="form" v-show="showformadd" @submit.prevent="addcategory">
+            <form  id="form" v-show="showformadd"  @submit.prevent="addcategory">
                 <div class="form-row">
                     <div class="col-2">
                         <input type="text" class="form-control" placeholder="Category" v-model="category.name">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary" style="margin-top: 10px">Create Category</button>
+                <button type="submit" class="btn btn-primary" style="margin-top: 10px;margin-right: 10px">Create Category</button>
                 <button type="button" class="btn btn-warning" style="margin-top: 10px" v-on:click="cancelform">Cancel
                 </button>
             </form>
         </div>
 
-        <table class="table table-striped">
+        <table class="table table-striped" style="margin-top: 10px">
             <thead>
             <tr>
                 <th scope="col">ID</th>
@@ -64,35 +64,41 @@ export default {
     },
     created() {
         this.emitter.on('updatemenu', this.updatemenu)
-        this.$axios.get(`http://127.0.0.1:8000/api/category`).then(response => {
-            this.categories = response.data;
-            console.log(this.categories.books);
+        this.emitter.on('closeedit', this.closeedit)
+        this.$axios.get('/sanctum/csrf-cookie').then(response => {
+            this.$axios.get(`/api/category`).then(response => {
+                this.categories = response.data;
+            })
         })
     },
     methods: {
         dlcategory(id, index) {
-            this.$axios.delete(`category/` + id)
-                .then(response => {
-                    if (index > -1) {
-                        this.categories.splice(index, 1); // 2nd parameter means remove one item only
-                    }
-                });
+            this.$axios.get('/sanctum/csrf-cookie').then(response => {
+                this.$axios.delete(`/api/category/` + id)
+                    .then(response => {
+                        if (index > -1) {
+                            this.categories.splice(index, 1); // 2nd parameter means remove one item only
+                        }
+                    })
+            })
         },
         popupform() {
             this.showformadd=true;
         },
         cancelform() {
-            this.$refs.form.style.display = 'none';
+            this.showformadd=false
             this.category.name = ''
         },
         addcategory() {
             var data = {
                 name: this.category.name
             }
-            this.$axios.post(`category`, data).then(response => {
-                this.categories.push(response.data)
-                this.cancelform()
-            });
+            this.$axios.get('/sanctum/csrf-cookie').then(response => {
+                this.$axios.post(`/api/category`, data).then(response => {
+                    this.categories.push(response.data)
+                    this.cancelform()
+                })
+            })
         },
         editcategory(id) {
             this.showedit = true;
@@ -111,7 +117,13 @@ export default {
 
             }
         }
-    }
+    },
+    beforeRouteEnter(to, from, next) {
+        if (!auth.isLoggedin) {
+            window.location.href = "/home";
+        }
+        next();
+    },
 
 }
 </script>

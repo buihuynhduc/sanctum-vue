@@ -18,7 +18,7 @@ export default {
     },
     beforeRouteEnter(to, from, next) {
         if (!auth.isLoggedin) {
-            window.location.href = "/";
+            window.location.href = "/home";
         }
         next();
     }

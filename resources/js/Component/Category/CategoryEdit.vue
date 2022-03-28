@@ -7,7 +7,7 @@
                     <input type="text" class="form-control" placeholder="Category" v-model="dataedit.name">
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary" style="margin-top: 10px">Edit Category</button>
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px; margin-right: 10px">Edit Category</button>
             <button type="button" class="btn btn-warning" style="margin-top: 10px" v-on:click="cancelform">Cancel
             </button>
         </form>
@@ -29,8 +29,10 @@ export default {
     },
     methods: {
         getdataedit(id) {
-           this.$axios.get('category/' + id).then(response => {
-                this.dataedit = response.data
+            this.$axios.get('/sanctum/csrf-cookie').then(response => {
+                this.$axios.get('/api/category/' + id).then(response => {
+                    this.dataedit = response.data
+                })
             })
         },
         cancelform() {
@@ -41,13 +43,21 @@ export default {
             var data = {
                 name: this.dataedit.name
             }
-            this.$axios.put(`category/`+id, data).then(response => {
-                this.emitter.emit('updatemenu',response.data)
-                this.dataedit=''
-                this.cancelform()
+            this.$axios.get('/sanctum/csrf-cookie').then(response => {
+                this.$axios.put(`/api/category/` + id, data).then(response => {
+                    this.emitter.emit('updatemenu', response.data)
+                    this.dataedit = ''
+                    this.cancelform()
+                })
             })
         }
 
+    },
+    beforeRouteEnter(to, from, next) {
+        if (!auth.isLoggedin) {
+            window.location.href = "/home";
+        }
+        next();
     }
 }
 </script>

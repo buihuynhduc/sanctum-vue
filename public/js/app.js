@@ -19591,30 +19591,37 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   created: function created() {
     var _this = this;
 
-    this.$axios.get("http://127.0.0.1:8000/api/book").then(function (response) {
-      _this.books = response.data;
+    this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+      _this.$axios.get("/api/book").then(function (response) {
+        _this.books = response.data;
+      });
     });
-    this.$axios.get('category').then(function (response) {
-      _this.categories = response.data;
+    this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+      _this.$axios.get('/api/category').then(function (response) {
+        _this.categories = response.data;
+      });
     });
     this.emitter.on('updatelistbook', this.updatelistbook);
+    this.emitter.on('canceleditbook', this.canceleditbook);
   },
   methods: {
     dlbook: function dlbook(id, index) {
       var _this2 = this;
 
-      this.$axios["delete"]("book/" + id).then(function (response) {
-        if (index > -1) {
-          _this2.books.splice(index, 1); // 2nd parameter means remove one item only
+      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+        _this2.$axios["delete"]("/api/book/" + id).then(function (response) {
+          if (index > -1) {
+            _this2.books.splice(index, 1); // 2nd parameter means remove one item only
 
-        }
+          }
+        });
       });
     },
     openaddform: function openaddform() {
       this.showformadd = true;
     },
     closeform: function closeform() {
-      this.refs.form.style.display = 'none';
+      this.showformadd = false;
     },
     addbook: function addbook() {
       var _this3 = this;
@@ -19641,17 +19648,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         description: this.book.description,
         category_id: this.book.category_id
       };
-      this.$axios.post("book", data).then(function (response) {
-        _this3.books.push(response.data);
+      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+        _this3.$axios.post("/api/book", data).then(function (response) {
+          _this3.books.push(response.data);
 
-        _this3.book = {};
+          _this3.book = {};
 
-        _this3.closeform();
+          _this3.closeform();
+        });
       });
     },
-    editbook: function editbook(id, categories) {
+    editbook: function editbook(id) {
       this.showeditbook = true;
-      this.emitter.emit('editbook', id, categories);
+      this.emitter.emit('editbook', id);
     },
     canceleditbook: function canceleditbook() {
       this.showeditbook = false;
@@ -19680,6 +19689,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         _iterator2.f();
       }
     }
+  },
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    if (!auth.isLoggedin) {
+      window.location.href = "/home";
+    }
+
+    next();
   }
 });
 
@@ -19705,31 +19721,41 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
+    var _this = this;
+
     this.emitter.on('editbook', this.editbook);
+    this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+      _this.$axios.get('/api/category').then(function (response) {
+        _this.categories = response.data;
+      });
+    });
   },
   methods: {
-    editbook: function editbook(id, categories) {
-      var _this = this;
+    editbook: function editbook(id) {
+      var _this2 = this;
 
-      this.categories = categories;
-      this.$axios.get('book/' + id).then(function (response) {
-        _this.databook = response.data;
+      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+        _this2.$axios.get('/api/book/' + id).then(function (response) {
+          _this2.databook = response.data;
+        });
       });
     },
     updatebook: function updatebook(id) {
-      var _this2 = this;
+      var _this3 = this;
 
       var data = {
         bookname: this.databook.bookname,
         description: this.databook.description,
         category_id: this.databook.category_id
       };
-      this.$axios.put("http://127.0.0.1:8000/api/book/" + id, data).then(function (response) {
-        _this2.emitter.emit('updatelistbook', response.data);
+      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+        _this3.$axios.put("/api/book/" + id, data).then(function (response) {
+          _this3.emitter.emit('updatelistbook', response.data);
 
-        _this2.databook = '';
+          _this3.databook = '';
 
-        _this2.canceleditbook();
+          _this3.canceleditbook();
+        });
       });
     },
     canceleditbook: function canceleditbook() {
@@ -19775,27 +19801,31 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var _this = this;
 
     this.emitter.on('updatemenu', this.updatemenu);
-    this.$axios.get("http://127.0.0.1:8000/api/category").then(function (response) {
-      _this.categories = response.data;
-      console.log(_this.categories.books);
+    this.emitter.on('closeedit', this.closeedit);
+    this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+      _this.$axios.get("/api/category").then(function (response) {
+        _this.categories = response.data;
+      });
     });
   },
   methods: {
     dlcategory: function dlcategory(id, index) {
       var _this2 = this;
 
-      this.$axios["delete"]("category/" + id).then(function (response) {
-        if (index > -1) {
-          _this2.categories.splice(index, 1); // 2nd parameter means remove one item only
+      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+        _this2.$axios["delete"]("/api/category/" + id).then(function (response) {
+          if (index > -1) {
+            _this2.categories.splice(index, 1); // 2nd parameter means remove one item only
 
-        }
+          }
+        });
       });
     },
     popupform: function popupform() {
       this.showformadd = true;
     },
     cancelform: function cancelform() {
-      this.$refs.form.style.display = 'none';
+      this.showformadd = false;
       this.category.name = '';
     },
     addcategory: function addcategory() {
@@ -19804,10 +19834,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var data = {
         name: this.category.name
       };
-      this.$axios.post("category", data).then(function (response) {
-        _this3.categories.push(response.data);
+      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+        _this3.$axios.post("/api/category", data).then(function (response) {
+          _this3.categories.push(response.data);
 
-        _this3.cancelform();
+          _this3.cancelform();
+        });
       });
     },
     editcategory: function editcategory(id) {
@@ -19836,6 +19868,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         _iterator.f();
       }
     }
+  },
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    if (!auth.isLoggedin) {
+      window.location.href = "/home";
+    }
+
+    next();
   }
 });
 
@@ -19866,8 +19905,10 @@ __webpack_require__.r(__webpack_exports__);
     getdataedit: function getdataedit(id) {
       var _this = this;
 
-      this.$axios.get('category/' + id).then(function (response) {
-        _this.dataedit = response.data;
+      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+        _this.$axios.get('/api/category/' + id).then(function (response) {
+          _this.dataedit = response.data;
+        });
       });
     },
     cancelform: function cancelform() {
@@ -19879,14 +19920,23 @@ __webpack_require__.r(__webpack_exports__);
       var data = {
         name: this.dataedit.name
       };
-      this.$axios.put("category/" + id, data).then(function (response) {
-        _this2.emitter.emit('updatemenu', response.data);
+      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+        _this2.$axios.put("/api/category/" + id, data).then(function (response) {
+          _this2.emitter.emit('updatemenu', response.data);
 
-        _this2.dataedit = '';
+          _this2.dataedit = '';
 
-        _this2.cancelform();
+          _this2.cancelform();
+        });
       });
     }
+  },
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    if (!auth.isLoggedin) {
+      window.location.href = "/home";
+    }
+
+    next();
   }
 });
 
@@ -19915,7 +19965,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     if (!auth.isLoggedin) {
-      window.location.href = "/";
+      window.location.href = "/home";
     }
 
     next();
@@ -20204,10 +20254,38 @@ var _hoisted_1 = {
   "class": "container_book"
 };
 var _hoisted_2 = {
-  "class": "table table-striped"
+  "class": "form-col",
+  style: {
+    "margin-bottom": "10px"
+  }
 };
 
 var _hoisted_3 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Select Category", -1
+  /* HOISTED */
+  );
+});
+
+var _hoisted_4 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "submit",
+    "class": "btn btn-primary",
+    style: {
+      "margin-right": "10px"
+    }
+  }, "Create Book", -1
+  /* HOISTED */
+  );
+});
+
+var _hoisted_5 = {
+  "class": "table table-striped",
+  style: {
+    "margin-top": "10px"
+  }
+};
+
+var _hoisted_6 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
     scope: "col"
   }, "ID"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
@@ -20229,8 +20307,8 @@ var _hoisted_3 = /*#__PURE__*/_withScopeId(function () {
   );
 });
 
-var _hoisted_4 = ["onClick"];
-var _hoisted_5 = ["onClick"];
+var _hoisted_7 = ["onClick"];
+var _hoisted_8 = ["onClick"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_book_edit = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("book-edit");
 
@@ -20238,7 +20316,68 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onCanceleditbook: $options.canceleditbook
   }, null, 8
   /* PROPS */
-  , ["onCanceleditbook"]), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, $data.showeditbook == true]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        <div v-show=\"showeditbook==false\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <button class=\"btn btn-primary\" v-show=\"showformadd\" id=\"create_book\" style=\"margin-bottom: 10px\" v-on:click=\"openaddform\">Add Book"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <form id=\"form\"  @submit.prevent=\"addbook\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <input type=\"text\" class=\"form-control\" placeholder=\"bookname\" style=\"margin-bottom: 10px\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                       v-model=\"book.bookname\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <div class=\"form-col\" style=\"margin-bottom: 10px\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <label>Select Category</label>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <select class=\"form-control\" v-model=\"book.category_name\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        <option v-for=\"category in categories\">{{ category.name }}</option>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    </select>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <input type=\"text\" class=\"form-control\" placeholder=\"description\" style=\"margin-bottom: 10px\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                       v-model=\"book.description\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button type=\"submit\" class=\"btn btn-primary\">Create Book</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button type=\"button\" class=\"btn btn-warning\" v-on:click=\"closeform\">Cancel</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </form>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.books, function (book, index) {
+  , ["onCanceleditbook"]), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, $data.showeditbook == true]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    "class": "btn btn-primary",
+    id: "create_book",
+    style: {
+      "margin-bottom": "10px"
+    },
+    onClick: _cache[0] || (_cache[0] = function () {
+      return $options.openaddform && $options.openaddform.apply($options, arguments);
+    })
+  }, "Add Book "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+    id: "form",
+    onSubmit: _cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+      return $options.addbook && $options.addbook.apply($options, arguments);
+    }, ["prevent"]))
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "text",
+    "class": "form-control",
+    placeholder: "bookname",
+    style: {
+      "margin-bottom": "10px"
+    },
+    "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+      return $data.book.bookname = $event;
+    })
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.book.bookname]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+    "class": "form-control",
+    "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+      return $data.book.category_name = $event;
+    })
+  }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.categories, function (category) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(category.name), 1
+    /* TEXT */
+    );
+  }), 256
+  /* UNKEYED_FRAGMENT */
+  ))], 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.book.category_name]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "text",
+    "class": "form-control",
+    placeholder: "description",
+    style: {
+      "margin-bottom": "10px"
+    },
+    "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+      return $data.book.description = $event;
+    })
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.book.description]]), _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    "class": "btn btn-warning",
+    onClick: _cache[4] || (_cache[4] = function () {
+      return $options.closeform && $options.closeform.apply($options, arguments);
+    })
+  }, "Cancel")], 544
+  /* HYDRATE_EVENTS, NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, $data.showformadd]])], 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, $data.showeditbook == false]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_5, [_hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.books, function (book, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(book.id), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(book.bookname), 1
@@ -20258,14 +20397,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }
     }, "Edit", 8
     /* PROPS */
-    , _hoisted_4)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    , _hoisted_7)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       "class": "btn btn-danger",
       onClick: function onClick($event) {
         return $options.dlbook(book.id, index);
       }
     }, "Delete", 8
     /* PROPS */
-    , _hoisted_5)])]);
+    , _hoisted_8)])]);
   }), 256
   /* UNKEYED_FRAGMENT */
   ))])])]);
@@ -20311,7 +20450,10 @@ var _hoisted_4 = ["value", "selected"];
 
 var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
   type: "submit",
-  "class": "btn btn-primary"
+  "class": "btn btn-primary",
+  style: {
+    "margin-right": "10px"
+  }
 }, "Edit Book", -1
 /* HOISTED */
 );
@@ -20412,7 +20554,8 @@ var _hoisted_4 = /*#__PURE__*/_withScopeId(function () {
     type: "submit",
     "class": "btn btn-primary",
     style: {
-      "margin-top": "10px"
+      "margin-top": "10px",
+      "margin-right": "10px"
     }
   }, "Create Category", -1
   /* HOISTED */
@@ -20420,7 +20563,10 @@ var _hoisted_4 = /*#__PURE__*/_withScopeId(function () {
 });
 
 var _hoisted_5 = {
-  "class": "table table-striped"
+  "class": "table table-striped",
+  style: {
+    "margin-top": "10px"
+  }
 };
 
 var _hoisted_6 = /*#__PURE__*/_withScopeId(function () {
@@ -20569,7 +20715,8 @@ var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
   type: "submit",
   "class": "btn btn-primary",
   style: {
-    "margin-top": "10px"
+    "margin-top": "10px",
+    "margin-right": "10px"
   }
 }, "Edit Category", -1
 /* HOISTED */
