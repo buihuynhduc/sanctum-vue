@@ -12,6 +12,7 @@ class LoginController extends Controller
 {
     public function Login(Request $request)
     {
+
         $credentials = [
             'email' => $request->email,
             'password' => $request->password,
@@ -19,8 +20,8 @@ class LoginController extends Controller
         if(!Auth::attempt($credentials))
         {
             return response()->json([
-                'message' => 'Invalid login details'
-            ], 401);
+                'error'=>'Invalid login details'
+            ]);
         }
         else
         {

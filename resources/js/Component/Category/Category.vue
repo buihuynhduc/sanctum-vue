@@ -5,13 +5,15 @@
             <button id="addcategory" ref="addcategory" class="btn btn-primary" v-on:click="popupform"
                     style="margin-bottom: 10px">Add Category
             </button>
-            <form  id="form" v-show="showformadd"  @submit.prevent="addcategory">
+            <form id="form" v-show="showformadd" @submit.prevent="addcategory">
                 <div class="form-row">
                     <div class="col-2">
                         <input type="text" class="form-control" placeholder="Category" v-model="category.name">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary" style="margin-top: 10px;margin-right: 10px">Create Category</button>
+                <button type="submit" class="btn btn-primary" style="margin-top: 10px;margin-right: 10px">Create
+                    Category
+                </button>
                 <button type="button" class="btn btn-warning" style="margin-top: 10px" v-on:click="cancelform">Cancel
                 </button>
             </form>
@@ -65,15 +67,14 @@ export default {
     created() {
         this.emitter.on('updatemenu', this.updatemenu)
         this.emitter.on('closeedit', this.closeedit)
-        this.$axios.get('/sanctum/csrf-cookie').then(response => {
-            this.$axios.get(`/api/category`).then(response => {
-                this.categories = response.data;
-            })
+
+        this.$axios.get(`/api/category`).then(response => {
+            this.categories = response.data;
         })
     },
     methods: {
         dlcategory(id, index) {
-            this.$axios.get('/sanctum/csrf-cookie').then(response => {
+            this.$axios.get('/sanctum/csrf-cookie').then(response=> {
                 this.$axios.delete(`/api/category/` + id)
                     .then(response => {
                         if (index > -1) {
@@ -83,20 +84,21 @@ export default {
             })
         },
         popupform() {
-            this.showformadd=true;
+            this.showformadd = true;
         },
         cancelform() {
-            this.showformadd=false
+            this.showformadd = false
             this.category.name = ''
         },
         addcategory() {
             var data = {
                 name: this.category.name
             }
-            this.$axios.get('/sanctum/csrf-cookie').then(response => {
+            this.$axios.get('/sanctum/csrf-cookie').then(response=> {
                 this.$axios.post(`/api/category`, data).then(response => {
                     this.categories.push(response.data)
                     this.cancelform()
+
                 })
             })
         },

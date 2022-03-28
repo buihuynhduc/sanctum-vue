@@ -19595,8 +19595,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       _this.$axios.get("/api/book").then(function (response) {
         _this.books = response.data;
       });
-    });
-    this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+
       _this.$axios.get('/api/category').then(function (response) {
         _this.categories = response.data;
       });
@@ -19608,7 +19607,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     dlbook: function dlbook(id, index) {
       var _this2 = this;
 
-      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
+      this.axios.get('/sanctum/csrf-cookie').then(function (response) {
         _this2.$axios["delete"]("/api/book/" + id).then(function (response) {
           if (index > -1) {
             _this2.books.splice(index, 1); // 2nd parameter means remove one item only
@@ -19724,20 +19723,16 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     this.emitter.on('editbook', this.editbook);
-    this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
-      _this.$axios.get('/api/category').then(function (response) {
-        _this.categories = response.data;
-      });
+    this.$axios.get('/api/category').then(function (response) {
+      _this.categories = response.data;
     });
   },
   methods: {
     editbook: function editbook(id) {
       var _this2 = this;
 
-      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
-        _this2.$axios.get('/api/book/' + id).then(function (response) {
-          _this2.databook = response.data;
-        });
+      this.$axios.get('/api/book/' + id).then(function (response) {
+        _this2.databook = response.data;
       });
     },
     updatebook: function updatebook(id) {
@@ -19748,14 +19743,12 @@ __webpack_require__.r(__webpack_exports__);
         description: this.databook.description,
         category_id: this.databook.category_id
       };
-      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
-        _this3.$axios.put("/api/book/" + id, data).then(function (response) {
-          _this3.emitter.emit('updatelistbook', response.data);
+      this.$axios.put("/api/book/" + id, data).then(function (response) {
+        _this3.emitter.emit('updatelistbook', response.data);
 
-          _this3.databook = '';
+        _this3.databook = '';
 
-          _this3.canceleditbook();
-        });
+        _this3.canceleditbook();
       });
     },
     canceleditbook: function canceleditbook() {
@@ -19802,10 +19795,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     this.emitter.on('updatemenu', this.updatemenu);
     this.emitter.on('closeedit', this.closeedit);
-    this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
-      _this.$axios.get("/api/category").then(function (response) {
-        _this.categories = response.data;
-      });
+    this.$axios.get("/api/category").then(function (response) {
+      _this.categories = response.data;
     });
   },
   methods: {
@@ -19905,10 +19896,8 @@ __webpack_require__.r(__webpack_exports__);
     getdataedit: function getdataedit(id) {
       var _this = this;
 
-      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
-        _this.$axios.get('/api/category/' + id).then(function (response) {
-          _this.dataedit = response.data;
-        });
+      this.$axios.get('/api/category/' + id).then(function (response) {
+        _this.dataedit = response.data;
       });
     },
     cancelform: function cancelform() {
@@ -20013,7 +20002,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      error: null
     };
   },
   methods: {
@@ -20025,7 +20015,11 @@ __webpack_require__.r(__webpack_exports__);
           email: _this.email,
           password: _this.password
         }).then(function (response) {
-          _this.$router.go('/dashboard');
+          if (!response.data.error) {
+            _this.$router.go('/dashboard');
+          } else {
+            _this.error = response.data.error;
+          }
         });
       });
     }
@@ -20067,7 +20061,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       if (this.password.length > 0) {
-        axios.get('/sanctum/csrf-cookie').then(function (response) {
+        this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
           axios.post('api/register', {
             name: _this.name,
             email: _this.email,
@@ -20557,7 +20551,7 @@ var _hoisted_4 = /*#__PURE__*/_withScopeId(function () {
       "margin-top": "10px",
       "margin-right": "10px"
     }
-  }, "Create Category", -1
+  }, "Create Category ", -1
   /* HOISTED */
   );
 });
@@ -20808,22 +20802,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
+  key: 0,
+  "class": "alert alert-danger",
+  role: "alert"
+};
+var _hoisted_2 = {
   "class": "form-group"
 };
 
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Email:", -1
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Email:", -1
 /* HOISTED */
 );
 
-var _hoisted_3 = {
+var _hoisted_4 = {
   "class": "form-group"
 };
 
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Password:", -1
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Password:", -1
 /* HOISTED */
 );
 
-var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
   type: "submit",
   "class": "btn btn-primary"
 }, "Submit", -1
@@ -20831,7 +20830,9 @@ var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 );
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [$data.error != null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.error), 1
+  /* TEXT */
+  )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
     "class": "was bg-light",
     style: {
       "padding": "20px",
@@ -20840,7 +20841,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onSubmit: _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
       return $options.loginsubmit && $options.loginsubmit.apply($options, arguments);
     }, ["prevent"]))
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "class": "form-control",
     placeholder: "Enter email",
@@ -20849,7 +20850,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })
   }, null, 512
   /* NEED_PATCH */
-  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.email]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.email]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [_hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "password",
     "class": "form-control",
     placeholder: "Enter password",
@@ -20858,7 +20859,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })
   }, null, 512
   /* NEED_PATCH */
-  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.password]])]), _hoisted_5], 32
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.password]])]), _hoisted_6], 32
   /* HYDRATE_EVENTS */
   )]);
 }

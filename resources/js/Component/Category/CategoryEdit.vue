@@ -15,8 +15,6 @@
 </template>
 
 <script>
-
-
 export default {
     name: "CategoryEdit",
     data() {
@@ -29,21 +27,18 @@ export default {
     },
     methods: {
         getdataedit(id) {
-            this.$axios.get('/sanctum/csrf-cookie').then(response => {
                 this.$axios.get('/api/category/' + id).then(response => {
                     this.dataedit = response.data
-                })
             })
         },
         cancelform() {
             this.emitter.emit('closeedit')
         },
-
         updatecate(id) {
             var data = {
                 name: this.dataedit.name
             }
-            this.$axios.get('/sanctum/csrf-cookie').then(response => {
+            this.$axios.get('/sanctum/csrf-cookie').then(response=> {
                 this.$axios.put(`/api/category/` + id, data).then(response => {
                     this.emitter.emit('updatemenu', response.data)
                     this.dataedit = ''
@@ -51,7 +46,6 @@ export default {
                 })
             })
         }
-
     },
     beforeRouteEnter(to, from, next) {
         if (!auth.isLoggedin) {

@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div v-if="error!=null" class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
         <form class="was bg-light " style="padding: 20px; border-radius: 10px" @submit.prevent="loginsubmit">
             <div class="form-group">
                 <label>Email:</label>
@@ -21,6 +24,7 @@ export default {
         return {
             email: '',
             password: '',
+            error: null
         }
     },
     methods: {
@@ -30,7 +34,14 @@ export default {
                     email: this.email,
                     password: this.password
                 }).then(response => {
-                    this.$router.go('/dashboard')
+                    if(!response.data.error){
+                        this.$router.go('/dashboard')
+                    }
+                    else
+                    {
+                        this.error=response.data.error
+                    }
+
                 })
             });
         },

@@ -31,19 +31,15 @@ export default {
     },
     created() {
         this.emitter.on('editbook', this.editbook)
-        this.$axios.get('/sanctum/csrf-cookie').then(response => {
             this.$axios.get('/api/category').then(response => {
                 this.categories = response.data
-            });
         })
     },
     methods: {
         editbook(id) {
-            this.$axios.get('/sanctum/csrf-cookie').then(response => {
                 this.$axios.get('/api/book/' + id).then(response => {
                     this.databook = response.data
                 })
-            })
         },
         updatebook(id) {
             let data = {
@@ -51,12 +47,10 @@ export default {
                 description: this.databook.description,
                 category_id: this.databook.category_id
             }
-            this.$axios.get('/sanctum/csrf-cookie').then(response => {
                 this.$axios.put(`/api/book/` + id, data).then(response => {
                     this.emitter.emit('updatelistbook', response.data)
                     this.databook = ''
                     this.canceleditbook()
-                })
             })
         },
         canceleditbook() {

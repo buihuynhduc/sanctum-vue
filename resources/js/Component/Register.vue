@@ -33,7 +33,7 @@ export default {
         registersubmit(){
             if(this.password.length>0)
             {
-                axios.get('/sanctum/csrf-cookie').then(response=>{
+                this.$axios.get('/sanctum/csrf-cookie').then(response=>{
                     axios.post('api/register',{
                         name: this.name,
                         email: this.email,
