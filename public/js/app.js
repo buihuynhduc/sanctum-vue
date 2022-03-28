@@ -19607,13 +19607,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     dlbook: function dlbook(id, index) {
       var _this2 = this;
 
-      this.axios.get('/sanctum/csrf-cookie').then(function (response) {
-        _this2.$axios["delete"]("/api/book/" + id).then(function (response) {
-          if (index > -1) {
-            _this2.books.splice(index, 1); // 2nd parameter means remove one item only
+      this.$axios["delete"]("/api/book/" + id).then(function (response) {
+        if (index > -1) {
+          _this2.books.splice(index, 1); // 2nd parameter means remove one item only
 
-          }
-        });
+        }
       });
     },
     openaddform: function openaddform() {
@@ -19803,13 +19801,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     dlcategory: function dlcategory(id, index) {
       var _this2 = this;
 
-      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
-        _this2.$axios["delete"]("/api/category/" + id).then(function (response) {
-          if (index > -1) {
-            _this2.categories.splice(index, 1); // 2nd parameter means remove one item only
+      this.$axios["delete"]("/api/category/" + id).then(function (response) {
+        if (index > -1) {
+          _this2.categories.splice(index, 1); // 2nd parameter means remove one item only
 
-          }
-        });
+        }
       });
     },
     popupform: function popupform() {
@@ -19823,14 +19819,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var _this3 = this;
 
       var data = {
-        name: this.category.name
+        name: this.category.name,
+        user_create: auth.user.name
       };
-      this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
-        _this3.$axios.post("/api/category", data).then(function (response) {
-          _this3.categories.push(response.data);
+      this.$axios.post("/api/category", data).then(function (response) {
+        _this3.categories.push(response.data);
 
-          _this3.cancelform();
-        });
+        _this3.cancelform();
       });
     },
     editcategory: function editcategory(id) {
@@ -20012,10 +20007,12 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
         _this.$axios.post('api/login', {
-          email: _this.email,
+          name: _this.email,
           password: _this.password
         }).then(function (response) {
           if (!response.data.error) {
+            console.log(response.data);
+
             _this.$router.go('/dashboard');
           } else {
             _this.error = response.data.error;
@@ -20572,6 +20569,8 @@ var _hoisted_6 = /*#__PURE__*/_withScopeId(function () {
     scope: "col"
   }, "Count Book"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
     scope: "col"
+  }, "User Create"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    scope: "col"
   }, "Create"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
     scope: "col"
   }, "Update"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
@@ -20641,6 +20640,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(category.name), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(category.books_count), 1
+    /* TEXT */
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(category.user_create), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(category.created_at), 1
     /* TEXT */

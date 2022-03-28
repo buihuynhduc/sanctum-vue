@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\book;
 use App\Models\category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -40,6 +41,7 @@ class CategoryController extends Controller
     {
         $category = new category();
         $category->name = $request->name;
+        $category->user_create = Auth::user()->name;
         $category->save();
         return response()->json($category);
     }

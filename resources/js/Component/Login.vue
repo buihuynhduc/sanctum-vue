@@ -31,16 +31,18 @@ export default {
         loginsubmit() {
             this.$axios.get('/sanctum/csrf-cookie').then(response => {
                 this.$axios.post('api/login', {
-                    email: this.email,
+                    name: this.email,
                     password: this.password
                 }).then(response => {
                     if(!response.data.error){
+                        console.log(response.data)
                         this.$router.go('/dashboard')
                     }
                     else
                     {
                         this.error=response.data.error
                     }
+
 
                 })
             });

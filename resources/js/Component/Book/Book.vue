@@ -87,13 +87,11 @@ export default {
     },
     methods: {
         dlbook: function (id, index) {
-            this.axios.get('/sanctum/csrf-cookie').then(response=> {
                 this.$axios.delete(`/api/book/` + id).then(response => {
                     if (index > -1) {
                         this.books.splice(index, 1); // 2nd parameter means remove one item only
                     }
                 })
-            })
         },
         openaddform() {
             this.showformadd = true

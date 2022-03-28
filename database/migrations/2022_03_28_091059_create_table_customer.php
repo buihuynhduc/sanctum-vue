@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Categories extends Migration
+class CreateTableCustomer extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class Categories extends Migration
      */
     public function up()
     {
-        Schema::create('categories',function (Blueprint $table){
+        Schema::create('customer', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('user_create')->nullable();
+            $table->string('password');
             $table->timestamps();
         });
     }

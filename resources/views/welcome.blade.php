@@ -9,11 +9,11 @@
     <link href="{{ mix('css/app.css') }}" type="text/css" rel="stylesheet"/>
 </head>
 <body>
-@if (Auth::check())
+@if (Auth::guard('customer')->check())
     <script>
         auth = {!!json_encode([
             'isLoggedin' => true,
-            'user' => Auth::user()
+            'user' => Auth::guard('customer')->user()
         ])!!}
     </script>
 @else

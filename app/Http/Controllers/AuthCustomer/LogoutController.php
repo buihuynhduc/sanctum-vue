@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\AuthCustomer;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -10,7 +10,7 @@ class LogoutController extends Controller
 {
     public function Logout(Request $request)
     {
-        $request->session()->flush();
+        Auth::guard('customer')->logout();
         return response()->json([
             'message' => 'logout success'
         ]);

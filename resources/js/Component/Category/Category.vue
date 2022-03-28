@@ -25,6 +25,7 @@
                 <th scope="col">ID</th>
                 <th scope="col">Name</th>
                 <th scope="col">Count Book</th>
+                <th scope="col">User Create</th>
                 <th scope="col">Create</th>
                 <th scope="col">Update</th>
                 <th scope="col">Action</th>
@@ -36,6 +37,7 @@
                 <td>{{ category.id }}</td>
                 <td>{{ category.name }}</td>
                 <td>{{ category.books_count }}</td>
+                <td>{{ category.user_create }}</td>
                 <td>{{ category.created_at }}</td>
                 <td>{{ category.updated_at }}</td>
                 <td>
@@ -67,21 +69,18 @@ export default {
     created() {
         this.emitter.on('updatemenu', this.updatemenu)
         this.emitter.on('closeedit', this.closeedit)
-
         this.$axios.get(`/api/category`).then(response => {
             this.categories = response.data;
         })
     },
     methods: {
         dlcategory(id, index) {
-            this.$axios.get('/sanctum/csrf-cookie').then(response=> {
                 this.$axios.delete(`/api/category/` + id)
                     .then(response => {
                         if (index > -1) {
                             this.categories.splice(index, 1); // 2nd parameter means remove one item only
                         }
                     })
-            })
         },
         popupform() {
             this.showformadd = true;
@@ -92,15 +91,13 @@ export default {
         },
         addcategory() {
             var data = {
-                name: this.category.name
+                name: this.category.name,
+                user_create: auth.user.name
             }
-            this.$axios.get('/sanctum/csrf-cookie').then(response=> {
                 this.$axios.post(`/api/category`, data).then(response => {
                     this.categories.push(response.data)
                     this.cancelform()
-
                 })
-            })
         },
         editcategory(id) {
             this.showedit = true;
