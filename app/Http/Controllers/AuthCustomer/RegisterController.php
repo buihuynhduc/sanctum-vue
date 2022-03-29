@@ -13,13 +13,16 @@ class RegisterController extends Controller
     {
         $validate = $request->validate([
             'name'=>'required|string|max:255',
+            'email'=>'required|string|max:255|email|unique:users',
             'password'=>'required|min:4'
         ]);
-        $customer = Customer::create([
+        $user= Customer::create([
             'name'=>$validate['name'],
+            'email'=>$validate['email'],
             'password'=>Hash::make($validate['password']),
         ]);
-        $token = $customer->createToken('auth')->plainTextToken;
+
+        $token = $user->createToken('auth')->plainTextToken;
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',

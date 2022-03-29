@@ -16,22 +16,28 @@ class LoginController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ];
-        if(!Auth::attempt($credentials))
+        if(Auth::attempt($credentials))
         {
-            return response()->json([
-                'error'=>'Invalid login details'
-            ]);
+            $user = Auth::user();
         }
         else
         {
-            $user = Auth::user();
+            if(Auth::guard('customer')->attempt($credentials))
+            {
+                $user = Auth::guard('customer')->user();
+            }
+            else
+            {
+                return response()->json([
+                    'error'=>'Invalid login details'
+                ]);
+            }
         }
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'status'=>Auth::check()
         ]);
     }
 }

@@ -20007,7 +20007,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
         _this.$axios.post('api/login', {
-          name: _this.email,
+          email: _this.email,
           password: _this.password
         }).then(function (response) {
           if (!response.data.error) {
@@ -20059,7 +20059,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.password.length > 0) {
         this.$axios.get('/sanctum/csrf-cookie').then(function (response) {
-          axios.post('api/register', {
+          _this.$axios.post('api/register', {
             name: _this.name,
             email: _this.email,
             password: _this.password

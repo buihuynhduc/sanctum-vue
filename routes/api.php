@@ -18,8 +18,6 @@ Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 
 Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'Login']);
 //Customer
 Route::post('/customer/register',[\App\Http\Controllers\AuthCustomer\RegisterController::class,'Register']);
-Route::post('/customer/login', [\App\Http\Controllers\AuthCustomer\LoginController::class,'Login']);
-Route::post('/customer/logout',[\App\Http\Controllers\AuthCustomer\LogoutController::class,'Logout']);
 //End Customer
 Route::group(['middleware' => "auth:sanctum"], function () {
     Route::post('/logout', [\App\Http\Controllers\Auth\LogoutController::class, 'Logout']);

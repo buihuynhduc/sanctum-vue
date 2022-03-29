@@ -11,7 +11,7 @@ class LoginController extends Controller
     public function Login(Request $request)
     {
         $credentials = [
-            'name' => $request->name,
+            'email' => $request->email,
             'password' => $request->password,
         ];
         if(!Auth::guard('customer')->attempt($credentials))
